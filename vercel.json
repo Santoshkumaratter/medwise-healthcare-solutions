@@ -1,6 +1,9 @@
 {
   "cleanUrls": false,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/send-enquiry.php", "destination": "/api/send-enquiry" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
