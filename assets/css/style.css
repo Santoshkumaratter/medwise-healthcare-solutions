@@ -116,7 +116,7 @@ strong { font-weight: 700; }
   font-size: .84rem;
   letter-spacing: .005em;
 }
-.utility .shell {
+.utility > .shell {
   display: flex; flex-wrap: wrap; gap: 6px 26px;
   align-items: center; justify-content: space-between;
   min-height: 40px; padding-top: 7px; padding-bottom: 7px;
@@ -132,7 +132,7 @@ strong { font-weight: 700; }
   backdrop-filter: saturate(1.4) blur(8px);
   border-bottom: 1px solid var(--line);
 }
-.masthead .shell {
+.masthead > .shell {
   display: flex; align-items: center; justify-content: space-between;
   gap: 18px; min-height: 74px; flex-wrap: nowrap;
 }
@@ -262,7 +262,7 @@ strong { font-weight: 700; }
 .trust-cell > span { font-size: .92rem; color: var(--ink-soft); }
 
 /* ---------- Feature grid ----------------------------------------------- */
-.grid { display: grid; gap: 26px; }
+.grid { display: grid; gap: 26px; width: 100%; }
 .g2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
 .g3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .g4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
@@ -310,9 +310,10 @@ strong { font-weight: 700; }
 .step p { margin: 0; font-size: .98rem; color: var(--ink-soft); }
 
 /* ---------- Achiever result cards -------------------------------------- */
-.achievers { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 20px; }
+.achievers { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 20px; width: 100%; }
 .achiever {
   border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--paper);
+  min-width: 0; width: 100%;
 }
 .achiever-top {
   position: relative; padding: 26px 20px 20px; text-align: center;
@@ -594,7 +595,7 @@ strong { font-weight: 700; }
   }
   .nav a[aria-current="page"] { box-shadow: none; color: var(--blue-deep); }
   .nav .btn { margin: 12px 0 0; border-bottom: 0; width: 100%; }
-  .masthead .shell { position: relative; }
+  .masthead > .shell { position: relative; }
   .g2, .g3 { grid-template-columns: 1fr; }
   .step { grid-template-columns: 44px 1fr; gap: 14px; }
   .ribbon .shell { flex-direction: column; align-items: flex-start; }
@@ -612,8 +613,8 @@ strong { font-weight: 700; }
 }
 
 @media (max-width: 640px) {
-  .utility .shell > span:first-child { display: none; }
-  .utility .shell { justify-content: center; }
+  .utility > .shell > span:first-child { display: none; }
+  .utility > .shell { justify-content: center; }
   .float {
     right: max(12px, env(safe-area-inset-right));
     bottom: max(12px, env(safe-area-inset-bottom));
