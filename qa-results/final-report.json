@@ -1,0 +1,38 @@
+{
+  "pass": [
+    "Client JS calls API only; no mail secrets",
+    "API reads credentials from env only",
+    "API has no hardcoded password",
+    "index.html: exact meta (58/155)",
+    "HTTP 200 /",
+    "about.html: exact meta (52/156)",
+    "HTTP 200 /about.html",
+    "courses.html: exact meta (54/150)",
+    "HTTP 200 /courses.html",
+    "contact.html: exact meta (50/147)",
+    "HTTP 200 /contact.html",
+    "medical-coding-classes-in-kolhapur.html: exact meta (51/155)",
+    "HTTP 200 /medical-coding-classes-in-kolhapur.html",
+    "medical-coding-classes-in-sangli.html: exact meta (50/158)",
+    "HTTP 200 /medical-coding-classes-in-sangli.html",
+    "medical-coding-classes-in-satara.html: exact meta (50/154)",
+    "HTTP 200 /medical-coding-classes-in-satara.html",
+    "medical-coding-classes-in-belgaum.html: exact meta (54/158)",
+    "HTTP 200 /medical-coding-classes-in-belgaum.html",
+    "courses #cpc/#ccs anchors present",
+    "API required-field validation (400)",
+    "[desktop] no email addresses in contact HTML",
+    "[desktop] required validation UI",
+    "[desktop] error UI matches API failure (credentials pending or SMTP fail)",
+    "[desktop] optional visitor email field present",
+    "[mobile] no email addresses in contact HTML",
+    "[mobile] required validation UI",
+    "[mobile] error UI matches API failure (credentials pending or SMTP fail)",
+    "[mobile] optional visitor email field present"
+  ],
+  "fail": [
+    "PENDING TEJAS: Gmail not configured in env yet \u2014 live delivery not verified. Safe client error returned: {'ok': False, 'error': 'Could not send. Please call or WhatsApp 77090 99599.'}",
+    "[desktop] console errors: ['Failed to load resource: the server responded with a status of 500 (Internal Server Error)']",
+    "[mobile] console errors: ['Failed to load resource: the server responded with a status of 500 (Internal Server Error)']"
+  ]
+}
