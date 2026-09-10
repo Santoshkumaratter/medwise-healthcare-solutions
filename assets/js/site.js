@@ -20,8 +20,34 @@
     });
   }
 
-  /* Enquiry forms → Hostinger PHP (/send-enquiry.php). Recipient Gmail stays server-side only. */
-  var ENQUIRY_ENDPOINT = '/send-enquiry.php';
+  /* Enquiry: Hostinger PHP first, then Vercel/local API fallback. */
+  var ENQUIRY_ENDPOINTS = ['/send-enquiry.php', '/api/send-enquiry'];
+
+  function postEnquiry(payload) {
+    function attempt(i) {
+      if (i >= ENQUIRY_ENDPOINTS.length) {
+        return Promise.reject(new Error('enquiry_endpoints_failed'));
+      }
+      return fetch(ENQUIRY_ENDPOINTS[i], {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        // Missing PHP on Hostinger → 404; Vercel static .php → 405
+        if (res.status === 404 || res.status === 405) {
+          return attempt(i + 1);
+        }
+        return res.json().then(function (json) {
+          return { httpOk: res.ok, json: json };
+        });
+      });
+    }
+    return attempt(0);
+  }
+
   var forms = document.querySelectorAll('form[data-enquiry]');
 
   Array.prototype.forEach.call(forms, function (form) {
@@ -67,19 +93,7 @@
       var visitorEmail = get('email');
       if (visitorEmail) payload.email = visitorEmail;
 
-      fetch(ENQUIRY_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(function (res) {
-          return res.json().then(function (json) {
-            return { httpOk: res.ok, json: json };
-          });
-        })
+      postEnquiry(payload)
         .then(function (result) {
           var json = result.json || {};
           if (result.httpOk && json.ok) {
