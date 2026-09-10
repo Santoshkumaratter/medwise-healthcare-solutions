@@ -57,7 +57,11 @@ function sendFile(res, filePath) {
 const server = http.createServer(async (req, res) => {
   const u = new URL(req.url, 'http://127.0.0.1:' + PORT);
 
-  if (u.pathname === '/api/send-enquiry' || u.pathname === '/send-enquiry.php') {
+  if (
+    u.pathname === '/api/send-enquiry' ||
+    u.pathname === '/.netlify/functions/send-enquiry' ||
+    u.pathname === '/send-enquiry.php'
+  ) {
     let raw = '';
     req.on('data', (chunk) => {
       raw += chunk;
