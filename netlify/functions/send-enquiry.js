@@ -139,14 +139,23 @@ exports.handler = async function handler(event) {
       service: 'gmail',
       auth: { user: gmailUser, pass: gmailPass }
     });
-    await transporter.sendMail({
+
+    // Respond immediately so the UI feels instant (<1 s).
+    // Email is sent in the background after we reply.
+    const response = { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
+
+    // Background send — errors only logged, not shown to visitor.
+    transporter.sendMail({
       from: '"MedWise Website" <' + gmailUser + '>',
       to: toEmail,
       replyTo: fields.visitorEmail || gmailUser,
       subject: 'New enquiry from MedWise website — ' + fields.name,
       text: lines.join('\n')
+    }).catch(function (err) {
+      console.error('send-enquiry mail failed:', err && err.message ? err.message : err);
     });
-    return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
+
+    return response;
   } catch (err) {
     console.error('send-enquiry failed:', err && err.message ? err.message : err);
     return { statusCode: 502, headers, body: JSON.stringify(clientError()) };
