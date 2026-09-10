@@ -210,25 +210,29 @@ module.exports = async function handler(req, res) {
 
   const text = buildText(fields);
 
-  try {
-    if (gmailUser && gmailPass) {
-      await sendViaGmailSmtp(toEmail, gmailUser, gmailPass, fields, text);
-    } else {
-      await sendViaFormSubmit(toEmail, fields, text);
+  // Respond to the browser immediately so the UI feels instant (<1 s).
+  // Email is sent in the background after we reply.
+  res.statusCode = 200;
+  res.end(JSON.stringify({ ok: true }));
+
+  // Background send — errors are only logged, not shown to visitor.
+  (async () => {
+    try {
+      if (gmailUser && gmailPass) {
+        await sendViaGmailSmtp(toEmail, gmailUser, gmailPass, fields, text);
+      } else {
+        await sendViaFormSubmit(toEmail, fields, text);
+      }
+    } catch (err) {
+      const fsMsg =
+        err && err.formsubmit
+          ? JSON.stringify(err.formsubmit).slice(0, 500)
+          : '';
+      console.error(
+        'send-enquiry failed:',
+        err && err.message ? err.message : err,
+        fsMsg || ''
+      );
     }
-    res.statusCode = 200;
-    return res.end(JSON.stringify({ ok: true }));
-  } catch (err) {
-    const fsMsg =
-      err && err.formsubmit
-        ? JSON.stringify(err.formsubmit).slice(0, 500)
-        : '';
-    console.error(
-      'send-enquiry failed:',
-      err && err.message ? err.message : err,
-      fsMsg || ''
-    );
-    res.statusCode = 502;
-    return res.end(JSON.stringify(clientError()));
-  }
+  })();
 };

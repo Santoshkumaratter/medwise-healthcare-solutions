@@ -74,10 +74,31 @@
       var name = get('name');
       var phone = get('phone');
 
-      if (!name || !phone) {
+      if (!name) {
         if (status) {
           status.style.color = '#C0392B';
-          status.textContent = 'Please add your name and phone number so we can call you back.';
+          status.textContent = 'Please enter your name.';
+        }
+        return;
+      }
+      if (name.length < 2 || !/^[A-Za-z\u0900-\u097F\s]+$/.test(name)) {
+        if (status) {
+          status.style.color = '#C0392B';
+          status.textContent = 'Please enter a valid name (letters only, at least 2 characters).';
+        }
+        return;
+      }
+      if (!phone) {
+        if (status) {
+          status.style.color = '#C0392B';
+          status.textContent = 'Please enter your phone number.';
+        }
+        return;
+      }
+      if (!/^\d{10}$/.test(phone)) {
+        if (status) {
+          status.style.color = '#C0392B';
+          status.textContent = 'Please enter a valid 10-digit phone number.';
         }
         return;
       }
