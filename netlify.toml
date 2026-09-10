@@ -1,0 +1,51 @@
+# MedWise — Netlify
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  command = "npm install"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Form API (pretty path)
+[[redirects]]
+  from = "/api/send-enquiry"
+  to = "/.netlify/functions/send-enquiry"
+  status = 200
+  force = true
+
+# Extensionless HTML pages (sitemap / SEO URLs)
+[[redirects]]
+  from = "/about"
+  to = "/about.html"
+  status = 200
+
+[[redirects]]
+  from = "/courses"
+  to = "/courses.html"
+  status = 200
+
+[[redirects]]
+  from = "/contact"
+  to = "/contact.html"
+  status = 200
+
+[[redirects]]
+  from = "/medical-coding-classes-in-kolhapur"
+  to = "/medical-coding-classes-in-kolhapur.html"
+  status = 200
+
+[[redirects]]
+  from = "/medical-coding-classes-in-sangli"
+  to = "/medical-coding-classes-in-sangli.html"
+  status = 200
+
+[[redirects]]
+  from = "/medical-coding-classes-in-satara"
+  to = "/medical-coding-classes-in-satara.html"
+  status = 200
+
+[[redirects]]
+  from = "/medical-coding-classes-in-belgaum"
+  to = "/medical-coding-classes-in-belgaum.html"
+  status = 200

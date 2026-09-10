@@ -1,0 +1,8 @@
+# robots.txt - MedWise Healthcare Solutions
+# https://medwisehealthcaresolutions.com/
+# Must be uploaded to the site root so it resolves at /robots.txt
+
+User-agent: *
+Allow: /
+
+Sitemap: https://medwisehealthcaresolutions.com/sitemap.xml
