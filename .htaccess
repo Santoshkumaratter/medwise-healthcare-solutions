@@ -10,3 +10,12 @@
     Deny from all
   </Files>
 </IfModule>
+
+# Extensionless URLs used in sitemap.xml (Hostinger/Apache).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+</IfModule>
