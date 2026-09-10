@@ -20,8 +20,9 @@
     });
   }
 
-  /* Enquiry: Hostinger PHP first, then Vercel/local API fallback. */
-  var ENQUIRY_ENDPOINTS = ['/send-enquiry.php', '/api/send-enquiry'];
+  /* Enquiry: Hostinger PHP → same-origin API → Vercel API (CORS). */
+  var VERCEL_ENQUIRY = 'https://website-eight-iota-ni22rhq9op.vercel.app/api/send-enquiry';
+  var ENQUIRY_ENDPOINTS = ['/send-enquiry.php', '/api/send-enquiry', VERCEL_ENQUIRY];
 
   function postEnquiry(payload) {
     function attempt(i) {
@@ -36,13 +37,21 @@
         },
         body: JSON.stringify(payload)
       }).then(function (res) {
-        // Missing PHP on Hostinger → 404; Vercel static .php → 405
+        // Missing PHP on Hostinger → 404; Vercel static .php → 405; soft HTML errors → retry
         if (res.status === 404 || res.status === 405) {
           return attempt(i + 1);
         }
-        return res.json().then(function (json) {
+        return res.text().then(function (text) {
+          var json = {};
+          try {
+            json = text ? JSON.parse(text) : {};
+          } catch (err) {
+            return attempt(i + 1);
+          }
           return { httpOk: res.ok, json: json };
         });
+      }).catch(function () {
+        return attempt(i + 1);
       });
     }
     return attempt(0);

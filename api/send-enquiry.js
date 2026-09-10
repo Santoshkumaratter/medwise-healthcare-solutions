@@ -13,6 +13,35 @@
  */
 const nodemailer = require('nodemailer');
 
+const ALLOWED_ORIGINS = [
+  'https://medwisehealthcaresolutions.com',
+  'https://www.medwisehealthcaresolutions.com',
+  'https://website-eight-iota-ni22rhq9op.vercel.app',
+  'http://127.0.0.1:8765',
+  'http://localhost:8765',
+  'http://127.0.0.1:5500',
+  'http://localhost:5500'
+];
+
+function applyCors(req, res) {
+  const origin = String(req.headers.origin || '');
+  let allow = ALLOWED_ORIGINS.indexOf(origin) !== -1;
+  if (!allow && origin) {
+    try {
+      const host = new URL(origin).hostname;
+      allow = host.endsWith('.vercel.app') || host === 'localhost' || host === '127.0.0.1';
+    } catch (_) {
+      allow = false;
+    }
+  }
+  if (allow) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+}
+
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
   if (typeof req.body === 'string' && req.body) {
@@ -91,7 +120,6 @@ async function sendViaFormSubmit(toEmail, fields, text) {
   };
   if (fields.visitorEmail) payload.email = fields.visitorEmail;
 
-  // Must match the URL Tejas activated on FormSubmit (alias, not deploy URL).
   const origin = (
     process.env.SITE_URL ||
     'https://website-eight-iota-ni22rhq9op.vercel.app'
@@ -129,6 +157,12 @@ async function sendViaFormSubmit(toEmail, fields, text) {
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
+  applyCors(req, res);
+
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 204;
+    return res.end();
+  }
 
   if (req.method !== 'POST') {
     res.statusCode = 405;
