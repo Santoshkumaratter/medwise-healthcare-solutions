@@ -1,0 +1,12 @@
+# Deny direct web access to mail config (Hostinger/Apache).
+<IfModule mod_authz_core.c>
+  <Files "mail-config.php">
+    Require all denied
+  </Files>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  <Files "mail-config.php">
+    Order allow,deny
+    Deny from all
+  </Files>
+</IfModule>

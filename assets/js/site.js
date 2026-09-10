@@ -20,8 +20,8 @@
     });
   }
 
-  /* Enquiry forms → Vercel API (/api/send-enquiry). Recipient Gmail stays server-side only. */
-  var ENQUIRY_ENDPOINT = '/api/send-enquiry';
+  /* Enquiry forms → Hostinger PHP (/send-enquiry.php). Recipient Gmail stays server-side only. */
+  var ENQUIRY_ENDPOINT = '/send-enquiry.php';
   var forms = document.querySelectorAll('form[data-enquiry]');
 
   Array.prototype.forEach.call(forms, function (form) {
