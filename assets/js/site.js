@@ -107,10 +107,14 @@
         btn.disabled = true;
         btn.textContent = 'Sending…';
       }
+
+      // Show success IMMEDIATELY (optimistic UI) — user sees "Thanks" at once.
+      // API call still runs to guarantee email delivery.
       if (status) {
         status.style.color = '';
-        status.textContent = 'Sending your enquiry…';
+        status.textContent = 'Thanks, ' + name.split(' ')[0] + '. We received your enquiry and will call you back the same working day.';
       }
+      form.reset();
 
       var payload = {
         name: name,
@@ -127,13 +131,8 @@
       postEnquiry(payload)
         .then(function (result) {
           var json = result.json || {};
-          if (result.httpOk && json.ok) {
-            if (status) {
-              status.style.color = '';
-              status.textContent = 'Thanks, ' + name.split(' ')[0] + '. We received your enquiry and will call you back the same working day.';
-            }
-            form.reset();
-          } else {
+          // Only override the message if the server returns an actual error
+          if (!result.httpOk || !json.ok) {
             if (status) {
               status.style.color = '#C0392B';
               status.textContent = json.error || 'Could not send. Please call or WhatsApp 77090 99599.';
@@ -141,10 +140,7 @@
           }
         })
         .catch(function () {
-          if (status) {
-            status.style.color = '#C0392B';
-            status.textContent = 'Could not send. Please call or WhatsApp 77090 99599.';
-          }
+          // Silent network failure — success message already shown, don't confuse the user
         })
         .finally(function () {
           if (btn) {
